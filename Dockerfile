@@ -3,7 +3,7 @@
 # Based upon:
 # https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-in-docker
 
-FROM node:10.15.1-slim@sha256:f584009b47eb352e7ae0a550fb9394533dc9b80f7aa83d50ef81657358412d0e
+FROM node:12
     
 RUN  apt-get update \
      # See https://crbug.com/795759
@@ -19,6 +19,4 @@ RUN  apt-get update \
      && wget --quiet https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -O /usr/sbin/wait-for-it.sh \
      && chmod +x /usr/sbin/wait-for-it.sh
 
-# Install Puppeteer under /node_modules so it's available system-wide
-ADD package.json package-lock.json /
-RUN npm install
+
