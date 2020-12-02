@@ -3,30 +3,5 @@ FROM node:12.14.1-slim
 ENV PUPPETEER_VERESION=2.1.0 \
     NODE_PATH="/node_modules:/usr/local/lib/node_modules"
 
-# Install tini for a proper init process
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends wget gpg ca-certificates \
-    && url=https://github.com/krallin/tini/releases/download/v0.18.0 \
-    && wget -qO /usr/local/bin/tini ${url}/tini-amd64 \
-    && chmod +x /usr/local/bin/tini
+RUN apt-get update && apt-get install -yq gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget x11vnc x11-xkb-utils xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x11-apps xvfb
 
-# Install chromium & system fonts
-RUN apt-get install -y --no-install-recommends libgconf-2-4 fontconfig curl sudo \
-    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" \
-       >> /etc/apt/sources.list.d/google.list \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends google-chrome-unstable \
-         ttf-freefont fonts-ipafont-gothic \
-    && mkdir -p /usr/share/fonts/emoji \
-    && curl --location --silent --show-error --out /usr/share/fonts/emoji/emojione-android.ttf \
-         https://github.com/emojione/emojione-assets/releases/download/3.1.2/emojione-android.ttf \
-    && chmod -R +rx /usr/share/fonts/ \
-    && fc-cache -fv \
-    && apt-get purge --auto-remove -y curl \
-    && rm -rf /var/lib/apt/lists/* /usr/share/icons/Adwaita/256x256/apps
-
-# Install Puppeteer
-RUN export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    && npm install --global puppeteer@${PUPPETEER_VERESION} \
-    && mkdir /node_modules
